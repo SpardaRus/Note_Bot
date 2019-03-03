@@ -1,19 +1,27 @@
 package com.spardarus.bot;
 
-import com.spardarus.service.BotService;
+import com.spardarus.config.Proxy;
+import com.spardarus.service.BotStartable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import static com.spardarus.config.Proxy.buildBotOptions;
 
+@Component
 public class NoteBot extends TelegramLongPollingBot {
 
-    public NoteBot() {
-        super(buildBotOptions());
+
+    @Autowired
+    private BotStartable botStartable;
+
+    @Autowired
+    public NoteBot(Proxy connect) {
+        super(connect.buildBotOptions());
     }
     @Override
     public void onUpdateReceived(Update update) {
-        new BotService().start(update);
+        botStartable.start(update);
     }
 
     @Override
